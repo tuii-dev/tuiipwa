@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -18,42 +19,210 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Tuii - Learn anything, anywhere.  Better!">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+  <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  -->
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="tuiipwa">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="Tuii">
+  <!-- BETA 411012467075-d7dcsjhvh3sj1k1e997ikqgic54p632l.apps.googleusercontent.com -->
+  <!-- DEV 405887286047-p35f8tfqn35kl311ah7g7h1uhu07ei8r.apps.googleusercontent.com -->
+  <meta name="google-signin-client_id"
+    content="405887286047-p35f8tfqn35kl311ah7g7h1uhu07ei8r.apps.googleusercontent.com">
+
+  <!-- web-icons generated -->
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="./images/web-icons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./images/web-icons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./images/web-icons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./images/web-icons/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="60x60" href="./images/web-icons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="./images/web-icons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="76x76" href="./images/web-icons/apple-touch-icon-76x76.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="./images/web-icons/apple-touch-icon-152x152.png" />
+  <link rel="icon" type="image/png" href="./images/web-icons/favicon-196x196.png" sizes="196x196" />
+  <link rel="icon" type="image/png" href="./images/web-icons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="./images/web-icons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./images/web-icons/favicon-16x16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="./images/web-icons/favicon-128.png" sizes="128x128" />
+  <meta name="application-name" content="Tuii" />
+  <meta name="msapplication-TileColor" content="#024158" />
+  <meta name="msapplication-TileImage" content="./images/web-icons/mstile-144x144.png" />
+  <meta name="msapplication-square70x70logo" content="./images/web-icons/mstile-70x70.png" />
+  <meta name="msapplication-square150x150logo" content="./images/web-icons/mstile-150x150.png" />
+  <meta name="msapplication-wide310x150logo" content="./images/web-icons/mstile-310x150.png" />
+  <meta name="msapplication-square310x310logo" content="./images/web-icons/mstile-310x310.png" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>tuiipwa</title>
+  <title>Tuii</title>
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <style type="text/css">
+    .grecaptcha-badge {
+      visibility: hidden;
+    }
+
+    body {
+      margin-top: 0px;
+    }
+  </style>
+
 </head>
+
 <body>
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
+  <!-- Required for Google OAuth -->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <!-- IMPORTANT: load pdfjs files -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/build/pdf.js" type="text/javascript"></script> -->
+  <script src="assets/packages/libphonenumber_plugin/js/libphonenumber.js"></script>
+  <script src="assets/packages/libphonenumber_plugin/js/stringbuffer.js"></script>
+  <script src="js/beacon-v1-1.js"></script>
+  <!--
+  <script type="text/javascript">
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/build/pdf.worker.min.js";
+    pdfRenderOptions = {
+      // where cmaps are downloaded from
+      cMapUrl: "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/cmaps/",
+      // The cmaps are compressed in the case
+      cMapPacked: true,
+      // any other options for pdfjsLib.getDocument.
+      // params: {}
+    };
+    // To workaround the recent breaking change on Flutter Web, you can set workaround_for_flutter_93615 to true:
+    window.workaround_for_flutter_93615 = true;
   </script>
+  -->
+  <!-- This script installs service_worker.js to provide PWA functionality to
+       application. For more information, see:
+       https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script>
+    var serviceWorkerVersion = null;
+    var scriptLoaded = false;
+    function loadMainDartJs() {
+      if (scriptLoaded) {
+        return;
+      }
+      scriptLoaded = true;
+      var scriptTag = document.createElement('script');
+      scriptTag.src = 'main.dart.js?v=0.0.1';
+      scriptTag.type = 'application/javascript';
+      document.body.append(scriptTag);
+    }
+
+    if ('serviceWorker' in navigator) {
+      // Service workers are supported. Use them.
+      window.addEventListener('load', function () {
+        // Wait for registration to finish before dropping the <script> tag.
+        // Otherwise, the browser will load the script multiple times,
+        // potentially different versions.
+        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+        navigator.serviceWorker.register(serviceWorkerUrl)
+          .then((reg) => {
+            function waitForActivation(serviceWorker) {
+              serviceWorker.addEventListener('statechange', () => {
+                if (serviceWorker.state == 'activated') {
+                  console.log('Installed new service worker.');
+                  loadMainDartJs();
+                }
+              });
+            }
+            if (!reg.active && (reg.installing || reg.waiting)) {
+              // No active web worker and we have installed or are installing
+              // one for the first time. Simply wait for it to activate.
+              waitForActivation(reg.installing || reg.waiting);
+            } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
+              // When the app updates the serviceWorkerVersion changes, so we
+              // need to ask the service worker to update.
+              console.log('New service worker available.');
+              reg.update();
+              waitForActivation(reg.installing);
+            } else {
+              // Existing service worker is still good.
+              console.log('Loading app from service worker.');
+              loadMainDartJs();
+            }
+          });
+
+        // If service worker doesn't succeed in a reasonable amount of time,
+        // fallback to plaint <script> tag.
+        setTimeout(() => {
+          if (!scriptLoaded) {
+            console.warn(
+              'Failed to load app from service worker. Falling back to plain <script> tag.',
+            );
+            loadMainDartJs();
+          }
+        }, 4000);
+      });
+    } else {
+      // Service workers not supported. Just drop the <script> tag.
+      loadMainDartJs();
+    }
+  </script>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyB57tS6PuN3oqfO0gQwKyf-Gjg8vYk48hg",
+      authDomain: "tutorbase-336701.firebaseapp.com",
+      projectId: "tutorbase-336701",
+      storageBucket: "tutorbase-336701.appspot.com",
+      messagingSenderId: "405887286047",
+      appId: "1:405887286047:web:14a9f773ac15afb2518e2a",
+      measurementId: "G-8BHE79ZP84"
+    };
+
+    const firebaseConfig_beta = {
+      apiKey: "AIzaSyBM7Z01N0DZ5h4N4K4ve3E4DndXB1uS9lM",
+      authDomain: "tuii-380018.firebaseapp.com",
+      projectId: "tuii-380018",
+      storageBucket: "tuii-380018.appspot.com",
+      messagingSenderId: "411012467075",
+      appId: "1:411012467075:web:dff70699f1dc23853a4eb6",
+      measurementId: "G-YN4KNQXSYY"
+    };
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <!-- Alpha: 641120e695c921d24c41d271 -->
+  <!-- Beta: 645ca640c1d2d02825e8cf83 -->
+  <script>
+    window.markerConfig = {
+      project: '641120e695c921d24c41d271',
+      source: 'snippet',
+
+      // Enables native browser screenshot rendering
+      useNativeScreenshot: true,
+    };
+  </script>
+
+  <script>
+    !function (e, r, a) { if (!e.__Marker) { e.__Marker = {}; var t = [], n = { __cs: t };["show", "hide", "isVisible", "capture", "cancelCapture", "unload", "reload", "isExtensionInstalled", "setReporter", "setCustomData", "on", "off"].forEach(function (e) { n[e] = function () { var r = Array.prototype.slice.call(arguments); r.unshift(e), t.push(r) } }), e.Marker = n; var s = r.createElement("script"); s.async = 1, s.src = "https://edge.marker.io/latest/shim.js"; var i = r.getElementsByTagName("script")[0]; i.parentNode.insertBefore(s, i) } }(window, document);
+  </script>
+
+  <!-- Alpha: 3e10733b-5420-4aee-b906-a14034aa0ff2 -->
+  <!-- Beta:  -->
+  <script
+    type="text/javascript">!function (e, t, n) { function a() { var e = t.getElementsByTagName("script")[0], n = t.createElement("script"); n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e) } if (e.Beacon = n = function (t, n, a) { e.Beacon.readyQueue.push({ method: t, options: n, data: a }) }, n.readyQueue = [], "complete" === t.readyState) return a(); e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1) }(window, document, window.Beacon || function () { });</script>
+  <script type="text/javascript">window.Beacon('init', '3e10733b-5420-4aee-b906-a14034aa0ff2')</script>
+
 </body>
+
 </html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<title>Account linking complete</title>
+<p>Account linking is complete. If this does not happen automatically, please
+    close the window.
+    <script>
+        const channel = new BroadcastChannel('flutter_stripe_bridge');
+        channel.postMessage({
+            type: 'ACCOUNT_LINK_SUCCESS',
+            payload: {}
+        });
+        window.close();
+    </script>

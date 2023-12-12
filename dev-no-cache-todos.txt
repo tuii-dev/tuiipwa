@@ -1,0 +1,19 @@
+p1. Add below metatags to build output index.html
+
+<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+
+2. Add version query param to main.dart.js request
+   in index.html
+
+   function loadMainDartJs() {
+      if (scriptLoaded) {
+        return;
+      }
+      scriptLoaded = true;
+      var scriptTag = document.createElement('script');
+      scriptTag.src = 'main.dart.js?v=0.0.427' /* HERE */
+      scriptTag.type = 'application/javascript';
+      document.body.append(scriptTag);
+    }
+

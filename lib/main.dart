@@ -1,11 +1,92 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as sc;
+import 'package:tuiicore/core/models/system_constants.dart';
+import 'package:tuiipwa/web/constants/constants.dart';
+import 'firebase_options.dart';
+import 'injection_container.dart' as di;
+
+bool get isInDebugMode {
+  bool inDebugMode = true;
+  return inDebugMode;
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// App Key 6aby9fv6jwxm
+// Dev Key 5erm4235gptj
+const String streamChatAppKey = '6aby9fv6jwxm';
+final client = sc.StreamChatClient(streamChatAppKey, logLevel: sc.Level.SEVERE);
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Flutter >= 1.17 and Dart >= 2.8
+  runZonedGuarded<Future<void>>(() async {
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    debugPrint(
+        'Connecting to project: ${DefaultFirebaseOptions.currentPlatform.projectId}');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    final constants = SystemConstants(
+        channel: SystemConstantsProvider.channel,
+        channelSignUpIsSecured: SystemConstantsProvider.channelSignUpIsSecured,
+        runIdentityVerification:
+            SystemConstantsProvider.runIdentityVerification,
+        projectId: SystemConstantsProvider.projectId,
+        apiRootUrl: SystemConstantsProvider.apiRootUrl,
+        streamCreateTokenUrl: SystemConstantsProvider.streamCreateTokenUrl,
+        streamRevokeTokenUrl: SystemConstantsProvider.streamRevokeTokenUrl,
+        streamMessageUrl: SystemConstantsProvider.streamMessageUrl,
+        createAppLinkUrl: SystemConstantsProvider.createAppLinkUrl,
+        helpScoutBeaconId: SystemConstantsProvider.helpScoutBeaconId,
+        smsSendUrl: SystemConstantsProvider.smsSendUrl,
+        smsSendPhoneVerificationCodeUrl:
+            SystemConstantsProvider.smsSendPhoneVerificationCodeUrl,
+        smsVerifyPhoneVerificationCodeUrl:
+            SystemConstantsProvider.smsVerifyPhoneVerificationCodeUrl);
+
+    await di.init(constants);
+
+    runApp(const TuiiPwaApp());
+
+    //p
+  }, (error, stackTrace) async {
+    debugPrint('Caught Dart Error!');
+    if (isInDebugMode) {
+      // in development, print error and stack trace
+      debugPrint('$error');
+      debugPrint('$stackTrace');
+    } else {
+      // report to a error tracking system in production
+    }
+  });
+
+  // You only need to call this method if you need the binding to be initialized before calling runApp.
+  WidgetsFlutterBinding.ensureInitialized();
+  // This captures errors reported by the Flutter framework.
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    final dynamic exception = details.exception;
+    final StackTrace? stackTrace = details.stack;
+    if (isInDebugMode) {
+      debugPrint('Caught Framework Error!');
+      // In development mode simply print to console.
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      // In production mode report to the application zone
+      Zone.current.handleUncaughtError(exception, stackTrace!);
+    }
+  };
+}
+
+class TuiiPwaApp extends StatelessWidget {
+  const TuiiPwaApp({super.key});
 
   // This widget is the root of your application.
   @override

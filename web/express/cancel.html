@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<title>Account linking canceled</title>
+<p>Account linking has been canceled. If this does not happen automatically, please
+    close the window.
+    <script>
+        debugger;
+        const channel = new BroadcastChannel('flutter_stripe_bridge');
+        channel.postMessage({
+            type: 'ACCOUNT_LINK_CANCELED',
+            payload: {}
+        });
+        window.close();
+    </script>

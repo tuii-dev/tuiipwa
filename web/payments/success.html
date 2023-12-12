@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<title>Payment complete</title>
+<p>Payment is complete. If this does not happen automatically, please
+    close the window.
+    <script>
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        const channel = new BroadcastChannel('flutter_stripe_bridge');
+        channel.postMessage({
+            type: 'PAYMENT_SUCCESS',
+            payload: {
+                'bookingId': params.bookingId,
+            }
+        });
+        window.close();
+    </script>
