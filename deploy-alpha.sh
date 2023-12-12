@@ -1,2 +1,2 @@
 #!/bin/bash  
-firebase deploy --only hosting:tuiialpha
+firebase deploy --only hosting:tuii-pwa-alpha

@@ -12,7 +12,7 @@ p1. Add below metatags to build output index.html
       }
       scriptLoaded = true;
       var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js?v=0.0.427' /* HERE */
+      scriptTag.src = 'main.dart.js?v=0.0.1' /* HERE */
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
     }
