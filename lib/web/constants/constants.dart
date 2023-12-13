@@ -3,7 +3,7 @@ import 'package:tuiicore/core/enums/channel_type.dart';
 
 class SystemConstantsProvider extends InheritedWidget {
   // CONFIGURE DEV SETTINGS HERE
-  static const ChannelType channel = ChannelType.dev;
+  static const ChannelType channel = ChannelType.alpha;
   static const bool channelSignUpIsSecured = true;
   static const bool runIdentityVerification = false;
 
