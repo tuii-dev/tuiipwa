@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "tuii-pwa-alpha",
+    "site": "tuii-beta-pwa",
     "public": "build/web",
     "ignore": [
       "firebase.json",
