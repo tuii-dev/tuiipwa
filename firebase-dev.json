@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "tuii-pwa-alpha",
+    "site": "tuii-pwa-dev",
     "public": "build/web",
     "ignore": [
       "firebase.json",
@@ -29,6 +29,7 @@
     "predeploy": [
       "npm --prefix \"$RESOURCE_DIR\" run lint",
       "npm --prefix \"$RESOURCE_DIR\" run build"
-    ]
+    ],
+    "source": "functions"
   }
 }
