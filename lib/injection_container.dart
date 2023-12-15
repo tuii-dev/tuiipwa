@@ -64,6 +64,12 @@ import 'package:tuiicore/core/services/storage_repository_impl.dart';
 import 'package:tuiicore/core/services/toast_service.dart';
 import 'package:tuiicore/core/services/toast_service_impl.dart';
 import 'package:tuiicore/core/widgets/tag_manager/bloc/tag_manager_bloc.dart';
+import 'package:tuiipwa/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:tuiipwa/features/communications/presentation/bloc/stream_chat/stream_chat_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app/tuii_app_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app_link/tuii_app_link_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_beacon/tuii_beacon_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -76,8 +82,8 @@ Future<void> init(SystemConstants constants) async {
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: sl()));
 
-  sl.registerLazySingleton<ValidateSignUpHashUseCase>(
-      () => ValidateSignUpHashUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<ValidateSignUpHashUseCase>(
+  //     () => ValidateSignUpHashUseCase(authRepository: sl()));
 
   sl.registerLazySingleton<LoginWithEmailAndPasswordUseCase>(
       () => LoginWithEmailAndPasswordUseCase(authRepository: sl()));
@@ -106,17 +112,17 @@ Future<void> init(SystemConstants constants) async {
   sl.registerLazySingleton<UpdateUserPartitionUseCase>(
       () => UpdateUserPartitionUseCase(authRepository: sl()));
 
-  sl.registerLazySingleton<GetZoomTokenUseCase>(
-      () => GetZoomTokenUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<GetZoomTokenUseCase>(
+  //     () => GetZoomTokenUseCase(authRepository: sl()));
 
-  sl.registerLazySingleton<GetZoomAccountDetailsUseCase>(
-      () => GetZoomAccountDetailsUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<GetZoomAccountDetailsUseCase>(
+  //     () => GetZoomAccountDetailsUseCase(authRepository: sl()));
 
-  sl.registerLazySingleton<RevokeZoomTokenUseCase>(
-      () => RevokeZoomTokenUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<RevokeZoomTokenUseCase>(
+  //     () => RevokeZoomTokenUseCase(authRepository: sl()));
 
-  sl.registerLazySingleton<ValidateTutorDomainUseCase>(
-      () => ValidateTutorDomainUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<ValidateTutorDomainUseCase>(
+  //     () => ValidateTutorDomainUseCase(authRepository: sl()));
 
   sl.registerLazySingleton<UpdateEmailUseCase>(
       () => UpdateEmailUseCase(authRepository: sl()));
@@ -124,8 +130,8 @@ Future<void> init(SystemConstants constants) async {
   sl.registerLazySingleton<FinalizeOnboardingUseCase>(
       () => FinalizeOnboardingUseCase(authRepository: sl()));
 
-  sl.registerLazySingleton<ManageUserSubjectsUseCase>(
-      () => ManageUserSubjectsUseCase(authRepository: sl()));
+  // sl.registerLazySingleton<ManageUserSubjectsUseCase>(
+  //     () => ManageUserSubjectsUseCase(authRepository: sl()));
 
   sl.registerLazySingleton<SearchUsersUseCase>(
       () => SearchUsersUseCase(authRepository: sl()));
@@ -148,12 +154,27 @@ Future<void> init(SystemConstants constants) async {
 
   sl.registerLazySingleton(() => SystemOverlayBloc());
 
-  sl.registerFactory<GetStripeAccountLinkUrlUseCase>(
-      () => GetStripeAccountLinkUrlUseCase(repository: sl()));
-  sl.registerFactory<GetStripeAccountDetailsUseCase>(
-      () => GetStripeAccountDetailsUseCase(repository: sl()));
+  // sl.registerFactory<GetStripeAccountLinkUrlUseCase>(
+  //     () => GetStripeAccountLinkUrlUseCase(repository: sl()));
+
+  // sl.registerFactory<GetStripeAccountDetailsUseCase>(
+  //     () => GetStripeAccountDetailsUseCase(repository: sl()));
+
   sl.registerFactory<SendDirectConnectInvitationsUseCase>(
       () => SendDirectConnectInvitationsUseCase(repository: sl()));
+
+  sl.registerLazySingleton(() => AuthBloc(
+      streamChatBloc: sl(),
+      authRepository: sl(),
+      localStore: sl(),
+      logout: sl()));
+
+  sl.registerLazySingleton(() => LoginCubit(
+        authBloc: sl(),
+        loginWithEmailAndPassword: sl(),
+        loginWithGoogleUseCase: sl(),
+        forgotPasswordUseCase: sl(),
+      ));
 
   //! TuiiApp Feature
   sl.registerLazySingleton<TuiiModuleDataSource>(
@@ -191,6 +212,18 @@ Future<void> init(SystemConstants constants) async {
 
   sl.registerLazySingleton<AddDispatchJobUseCase>(
       () => AddDispatchJobUseCase(repository: sl()));
+
+  sl.registerLazySingleton(() => TuiiAppBloc(
+      getSystemConfiguration: sl(),
+      changePassword: sl(),
+      addDispatchJob: sl(),
+      repository: sl(),
+      lessonBookingRepository: sl()));
+
+  sl.registerLazySingleton(() => TuiiAppLinkBloc(
+        getAppLinkCommand: sl(),
+        expireAppLinkCommand: sl(),
+      ));
 
   //! Parents Feature
   sl.registerLazySingleton<ParentsModuleDataSource>(
@@ -328,9 +361,6 @@ Future<void> init(SystemConstants constants) async {
   sl.registerFactory<AddChannelMessageUseCase>(
       () => AddChannelMessageUseCase(repository: sl()));
 
-  //! Enrollments Feature
-  // sl.registerFactory(() => EnrollmentsBloc(numberOfForms: 6));
-
   //! Common
   sl.registerLazySingleton<StorageRepository>(
       () => StorageRepositoryImpl(storage: sl()));
@@ -350,4 +380,11 @@ Future<void> init(SystemConstants constants) async {
   sl.registerLazySingleton(() => Localstore.instance);
 
   //! ALL SINGLETONS HERE
+  sl.registerSingleton<TuiiBeaconBloc>(TuiiBeaconBloc());
+
+  sl.registerSingleton<StreamChatBloc>(StreamChatBloc(
+      createStreamToken: sl(),
+      revokeStreamToken: sl(),
+      addChannelMessage: sl(),
+      tuiiAppBloc: sl()));
 }

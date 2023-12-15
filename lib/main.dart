@@ -1,10 +1,35 @@
 import 'dart:async';
 
+import 'package:context_holder/context_holder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as sc;
+import 'package:tuiicore/core/bloc/system_overlay/system_overlay_bloc.dart';
+import 'package:tuiicore/core/config/theme/tuii_colors.dart';
+import 'package:tuiicore/core/config/theme/tuii_dark_theme.dart';
+import 'package:tuiicore/core/config/theme/tuii_light_theme.dart';
 import 'package:tuiicore/core/models/system_constants.dart';
+import 'package:tuiipwa/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/login_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/mobile_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/profile_selection_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/signup_screen.dart';
+import 'package:tuiipwa/features/communications/presentation/bloc/stream_chat/stream_chat_bloc.dart';
+import 'package:tuiipwa/features/splash/presentation/pages/splash_screen.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app/tuii_app_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app_link/tuii_app_link_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_beacon/tuii_beacon_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_notifications/tuii_notifications_bloc.dart';
+import 'package:tuiipwa/routes.dart';
+import 'package:tuiipwa/utils/conditional_route_widget.dart';
 import 'package:tuiipwa/web/constants/constants.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart' as di;
@@ -14,6 +39,11 @@ bool get isInDebugMode {
   return inDebugMode;
 }
 
+String? urlCommandKey;
+String? urlCommandPayload;
+String? urlDeepLinkPayload;
+String? appVersion;
+
 // App Key 6aby9fv6jwxm
 // Dev Key 5erm4235gptj
 const String streamChatAppKey = '6aby9fv6jwxm';
@@ -21,6 +51,9 @@ final client = sc.StreamChatClient(streamChatAppKey, logLevel: sc.Level.SEVERE);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  urlCommandKey = _getT1UrlParam(false);
+  urlCommandPayload = _getT2UrlParam(false);
+  urlDeepLinkPayload = _getT3UrlParam(false);
 
   // Flutter >= 1.17 and Dart >= 2.8
   runZonedGuarded<Future<void>>(() async {
@@ -91,106 +124,206 @@ class TuiiPwaApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tuii PWA',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => di.sl<TuiiBeaconBloc>()..init(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<SystemOverlayBloc>(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              di.sl<AuthBloc>()..init(client, urlCommandKey, urlCommandPayload),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<LoginCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<StreamChatBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TuiiAppBloc>()
+            ..initVersionManagementAndDeepLinking(
+                appVersion, urlDeepLinkPayload),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TuiiAppLinkBloc>()..init(urlCommandKey),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TuiiNotificationsBloc>(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Tuii',
+        debugShowCheckedModeBanner: false,
+        navigatorKey: ContextHolder.key,
+        themeMode: ThemeMode.system,
+        theme: getLightTheme(),
+        darkTheme: getDarkTheme(),
+        // initialRoute: SplashScreen.routeName,
+        // onGenerateRoute: WebDesktopRouter.onGenerateRoute,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+        ],
+        builder: (context, child) {
+          return sc.StreamChat(
+            client: client,
+            streamChatThemeData: sc.StreamChatThemeData(
+                colorTheme: sc.StreamColorTheme.light(
+                  appBg: TuiiColors.inactiveBackground,
+                ),
+                messageInputTheme: const sc.StreamMessageInputThemeData(
+                  sendButtonColor: TuiiColors.primary,
+                  expandButtonColor: TuiiColors.primary,
+                  sendButtonIdleColor: TuiiColors.inactiveTool,
+                  elevation: 0,
+                ),
+                otherMessageTheme: const sc.StreamMessageThemeData(
+                    messageBackgroundColor: TuiiColors.primary,
+                    messageBorderColor: TuiiColors.primary,
+                    messageTextStyle: TextStyle(
+                        color: TuiiColors.white, fontWeight: FontWeight.w500),
+                    messageAuthorStyle: TextStyle(
+                        fontWeight: FontWeight.w700, color: TuiiColors.black),
+                    createdAtStyle: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: TuiiColors.lightText)),
+                ownMessageTheme: const sc.StreamMessageThemeData(
+                    messageBackgroundColor: TuiiColors.otherMessageBackground,
+                    messageBorderColor: TuiiColors.otherMessageBackground,
+                    messageTextStyle: TextStyle(
+                        color: TuiiColors.black, fontWeight: FontWeight.w600),
+                    messageAuthorStyle: TextStyle(
+                        fontWeight: FontWeight.w700, color: TuiiColors.black),
+                    createdAtStyle: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: TuiiColors.lightText))),
+            streamChatConfigData:
+                sc.StreamChatConfigurationData(reactionIcons: []),
+            child: ResponsiveBreakpoints(
+                breakpoints: const [
+                  Breakpoint(start: 0, end: 450, name: MOBILE),
+                  Breakpoint(start: 451, end: 800, name: TABLET),
+                  Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                  Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+                ],
+                child: LoaderOverlay(
+                    useDefaultLoading: false,
+                    overlayWidget: const Center(
+                        child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: LoadingIndicator(
+                              indicatorType: Indicator.lineScale,
+                              colors: [
+                                TuiiColors.primary,
+                                TuiiColors.defaultColor,
+                                TuiiColors.defaultDarkColor,
+                                TuiiColors.active,
+                              ],
+                              strokeWidth: 0.25,
+                            ))),
+                    child: child!)),
+          );
+        },
+        initialRoute: '/splash',
+        // The following code implements the legacy ResponsiveWrapper AutoScale functionality
+        // using the new ResponsiveScaledBox. The ResponsiveScaledBox widget preserves
+        // the legacy ResponsiveWrapper behavior, scaling the UI instead of resizing.
+        //
+        // A ConditionalRouteWidget is used to showcase how to disable the AutoScale
+        // behavior for a page.
+        onGenerateRoute: (RouteSettings settings) {
+          // A custom `fadeThrough` route transition animation.
+          return Routes.fadeThrough(settings, (context) {
+            // Wrap widgets with another widget based on the route.
+            // Wrap the page with the ResponsiveScaledBox for desired pages.
+            return ConditionalRouteWidget(
+                routesExcluded: const [], // Excluding a page from AutoScale.
+                builder: (context, child) => MaxWidthBox(
+                      // A widget that limits the maximum width.
+                      // This is used to create a gutter area on either side of the content.
+                      maxWidth: 1200,
+                      background: Container(color: TuiiColors.bgColorScreen),
+                      child: ResponsiveScaledBox(
+                          // ResponsiveScaledBox renders its child with a FittedBox set to the `width` value.
+                          // Set the fixed width value based on the active breakpoint.
+                          width: ResponsiveValue<double>(context,
+                              conditionalValues: [
+                                const Condition.equals(
+                                    name: MOBILE, value: 450),
+                                const Condition.between(
+                                    start: 800, end: 1100, value: 800),
+                                const Condition.between(
+                                    start: 1000, end: 1200, value: 1000),
+                                // There are no conditions for width over 1200
+                                // because the `maxWidth` is set to 1200 via the MaxWidthBox.
+                              ]).value,
+                          child: child!),
+                    ),
+                child: BouncingScrollWrapper.builder(
+                    context, buildPage(settings.name ?? '', settings.arguments),
+                    dragWithMouse: true));
+          });
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+// onGenerateRoute route switcher.
+// Navigate using the page name, `Navigator.pushNamed(context, ListPage.name)`.
+Widget buildPage(String name, Object? arguments) {
+  switch (name) {
+    case '/splash':
+      return const SplashScreen();
+    case '/auth/login':
+      return I18n(child: const LoginScreen());
+    case '/auth/signup':
+      return I18n(child: const SignUpScreen());
+    case '/auth/profile':
+      return I18n(child: const ProfileSelectionScreen());
+    case '/auth/mobile':
+      return I18n(child: const MobileScreen());
+    default:
+      return _errorRoute();
+  }
+}
+
+String? _getT1UrlParam(bool isDebugMode) {
+  final key = isDebugMode
+      ? const String.fromEnvironment('t1')
+      : Uri.base.queryParameters['t1'];
+
+  return key;
+}
+
+String? _getT2UrlParam(bool isDebugMode) {
+  final key = isDebugMode
+      ? const String.fromEnvironment('t2')
+      : Uri.base.queryParameters['t2'];
+
+  return key;
+}
+
+String? _getT3UrlParam(bool isDebugMode) {
+  final key = isDebugMode
+      ? const String.fromEnvironment('t3')
+      : Uri.base.queryParameters['t3'];
+
+  return key;
+}
+
+Widget _errorRoute() {
+  return Scaffold(
+      appBar: AppBar(
+        title: const Text("Error"),
+      ),
+      body: const Center(child: Text("Something went wrong!")));
 }

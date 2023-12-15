@@ -20,7 +20,6 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Tuii - Learn anything, anywhere.  Better!">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!--
   <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
@@ -28,8 +27,9 @@
   -->
 
   <!-- iOS meta tags & icons -->
+  <meta name="theme-color" content="#002A39" />
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Tuii">
   <!-- BETA 411012467075-d7dcsjhvh3sj1k1e997ikqgic54p632l.apps.googleusercontent.com -->
   <!-- DEV 405887286047-p35f8tfqn35kl311ah7g7h1uhu07ei8r.apps.googleusercontent.com -->
@@ -71,6 +71,7 @@
 
     body {
       margin-top: 0px;
+      background-color: #002A39;
     }
   </style>
 
@@ -112,7 +113,7 @@
       }
       scriptLoaded = true;
       var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js?v=0.0.1';
+      scriptTag.src = 'main.dart.js?v=0.0.2';
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
     }
@@ -203,6 +204,7 @@
 
   <!-- Alpha: 641120e695c921d24c41d271 -->
   <!-- Beta: 645ca640c1d2d02825e8cf83 -->
+
   <script>
     window.markerConfig = {
       project: '641120e695c921d24c41d271',
@@ -222,7 +224,6 @@
   <script
     type="text/javascript">!function (e, t, n) { function a() { var e = t.getElementsByTagName("script")[0], n = t.createElement("script"); n.type = "text/javascript", n.async = !0, n.src = "https://beacon-v2.helpscout.net", e.parentNode.insertBefore(n, e) } if (e.Beacon = n = function (t, n, a) { e.Beacon.readyQueue.push({ method: t, options: n, data: a }) }, n.readyQueue = [], "complete" === t.readyState) return a(); e.attachEvent ? e.attachEvent("onload", a) : e.addEventListener("load", a, !1) }(window, document, window.Beacon || function () { });</script>
   <script type="text/javascript">window.Beacon('init', '3e10733b-5420-4aee-b906-a14034aa0ff2')</script>
-
 </body>
 
 </html>

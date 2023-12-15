@@ -1,7 +1,7 @@
 {
     "name": "Tuii Progressive Web App",
     "short_name": "Tuii",
-    "start_url": "/index.html",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#024158",
     "theme_color": "#024158",
