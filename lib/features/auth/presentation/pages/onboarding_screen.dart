@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:tuiicore/core/config/theme/tuii_colors.dart';
 import 'package:tuiicore/core/widgets/save_button.dart';
 import 'package:tuiipwa/features/auth/presentation/widgets/auth_instructional_text_widget.dart';
-import 'package:tuiipwa/features/auth/presentation/widgets/google_recaptch_widget.dart';
-import 'package:tuiipwa/features/auth/presentation/widgets/signup_widget.dart';
+import 'package:tuiipwa/features/auth/presentation/widgets/profile_manager_widget.dart';
 import 'package:tuiipwa/common/common.dart';
-import 'package:tuiipwa/utils/pwa_i18n.dart';
 import 'package:tuiipwa/utils/spacing.dart';
 
-class SignUpScreen extends StatefulWidget {
-  static const String routeName = '/auth/signup';
+class OnboardingScreen extends StatefulWidget {
+  static const String routeName = '/onboarding';
 
-  const SignUpScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final containerTop = (size.height * 0.2) - 20;
+    final containerHeight = size.height - containerTop - 10;
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -61,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             callback: () {
                                               manageLoginScreenRoute(context);
                                             },
-                                            label: "Login".i18n,
+                                            label: "Login",
                                             width: 80,
                                             height: 30,
                                             fontSize: 14,
@@ -81,25 +82,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Container(color: TuiiColors.bgColorScreen)),
                 ]),
             Positioned(
-                top: size.height * 0.2,
+                top: containerTop,
                 left: 0,
                 child: Padding(
                   padding: paddingHorizontal20,
                   child: Container(
-                      height: 510,
+                      height: containerHeight,
                       width: size.width - (space20 * 2),
                       decoration: BoxDecoration(
                           color: TuiiColors.white,
                           borderRadius: BorderRadius.circular(15)),
-                      child: const Padding(
-                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                        child: SignUpWidget(),
-                      )),
+                      child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
+                          child: SizedBox.expand(
+                            child: ProfileManagerWidget(
+                                isInstantiatedInSettings: false,
+                                containerHeight: containerHeight),
+                          ))),
                 )),
-            const Positioned(
-              bottom: space20,
-              child: GoogleRecaptchaWidget(),
-            ),
           ],
         ),
       ),

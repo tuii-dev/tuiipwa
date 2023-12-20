@@ -25,6 +25,7 @@ import 'package:tuiicalendar_domain_data_firestore/files/domain/usecases/raise_r
 import 'package:tuiicalendar_domain_data_firestore/files/domain/usecases/reject_booking_refund.dart';
 import 'package:tuiicalendar_domain_data_firestore/files/domain/usecases/update_accepted_lesson_booking.dart';
 import 'package:tuiicalendar_domain_data_firestore/files/domain/usecases/update_lesson_booking.dart';
+import 'package:tuiiclassroom_domain_data_firestore/files/domain/usecases/upload_file.dart';
 import 'package:tuiicommunications_domain_data_firestore/files/data/datasources/stream_chat_data_source.dart';
 import 'package:tuiicommunications_domain_data_firestore/files/data/datasources/stream_chat_data_source_impl.dart';
 import 'package:tuiicommunications_domain_data_firestore/files/data/repositories/stream_chat_repository_impl.dart';
@@ -65,11 +66,15 @@ import 'package:tuiicore/core/services/toast_service.dart';
 import 'package:tuiicore/core/services/toast_service_impl.dart';
 import 'package:tuiicore/core/widgets/tag_manager/bloc/tag_manager_bloc.dart';
 import 'package:tuiipwa/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/identityVerification/identity_verification_cubit.dart';
 import 'package:tuiipwa/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/phoneVerification/phone_verification_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/profile/profile_cubit.dart';
 import 'package:tuiipwa/features/communications/presentation/bloc/stream_chat/stream_chat_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app/tuii_app_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app_link/tuii_app_link_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_beacon/tuii_beacon_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_notifications/tuii_notifications_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -174,6 +179,21 @@ Future<void> init(SystemConstants constants) async {
         loginWithEmailAndPassword: sl(),
         loginWithGoogleUseCase: sl(),
         forgotPasswordUseCase: sl(),
+      ));
+
+  sl.registerLazySingleton(() => ProfileCubit(
+        finalizeOnboarding: sl(),
+        updateUser: sl(),
+        updateUserPartition: sl(),
+        uploadFile: sl(),
+        isEmailUnique: sl(),
+        updateEmail: sl(),
+        emailVerification: sl(),
+        loginWithEmailAndPassword: sl(),
+        authRepository: sl(),
+        refreshUser: sl(),
+        tuiiAppBloc: sl(),
+        authBloc: sl(),
       ));
 
   //! TuiiApp Feature
@@ -345,6 +365,9 @@ Future<void> init(SystemConstants constants) async {
   sl.registerFactory<GetStripeCheckoutUrlUseCase>(
       () => GetStripeCheckoutUrlUseCase(repository: sl()));
 
+  //! Classroom Feature
+  sl.registerLazySingleton<UploadFile>(() => UploadFile(repository: sl()));
+
   //! Communications Feature
   sl.registerLazySingleton<StreamChatDataSource>(
       () => StreamChatDataSourceImpl());
@@ -387,4 +410,25 @@ Future<void> init(SystemConstants constants) async {
       revokeStreamToken: sl(),
       addChannelMessage: sl(),
       tuiiAppBloc: sl()));
+
+  sl.registerSingleton<TuiiNotificationsBloc>(TuiiNotificationsBloc(
+      getNotificationsStream: sl(),
+      createNotification: sl(),
+      updateNotification: sl(),
+      updateNotificationList: sl(),
+      deleteNotification: sl(),
+      refreshLessonBooking: sl(),
+      authBloc: sl()));
+
+  sl.registerSingleton<IdentityVerificationCubit>(IdentityVerificationCubit(
+    emailVerification: sl(),
+    refreshUser: sl(),
+    getIsFirebaseUserEmailVerified: sl(),
+    repository: sl(),
+  ));
+
+  sl.registerSingleton<PhoneVerificationCubit>(PhoneVerificationCubit(
+    sendPhoneVerificationCode: sl(),
+    verifyPhoneVerificationCode: sl(),
+  ));
 }

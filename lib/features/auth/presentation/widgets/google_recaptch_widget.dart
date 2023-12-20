@@ -24,7 +24,7 @@ class GoogleRecaptchaWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text('This site is protected by reCAPTCHA and the '.i18n,
-                        style: const TextStyle(fontSize: 16)),
+                        style: const TextStyle(fontSize: 14)),
                   ],
                 ),
                 Row(
@@ -32,41 +32,35 @@ class GoogleRecaptchaWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text('Google '.i18n,
-                          style: const TextStyle(fontSize: 16)),
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            const privacyUrl =
-                                'https://policies.google.com/privacy';
+                          style: const TextStyle(fontSize: 14)),
+                      GestureDetector(
+                        onTap: () {
+                          const privacyUrl =
+                              'https://policies.google.com/privacy';
 
-                            html.window.open(privacyUrl, '_blank');
-                          },
-                          child: Text('Privacy Policy'.i18n,
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  color: TuiiColors.linkTextColor)),
-                        ),
+                          html.window.open(privacyUrl, '_blank');
+                        },
+                        child: Text('Privacy Policy'.i18n,
+                            style: const TextStyle(
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                                color: TuiiColors.linkTextColor)),
                       ),
-                      Text(' and '.i18n, style: const TextStyle(fontSize: 16)),
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            const url = 'https://policies.google.com/terms';
+                      Text(' and '.i18n, style: const TextStyle(fontSize: 14)),
+                      GestureDetector(
+                        onTap: () {
+                          const url = 'https://policies.google.com/terms';
 
-                            html.window.open(url, '_blank');
-                          },
-                          child: Text('Terms of Service'.i18n,
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  color: TuiiColors.linkTextColor)),
-                        ),
+                          html.window.open(url, '_blank');
+                        },
+                        child: Text('Terms of Service'.i18n,
+                            style: const TextStyle(
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                                color: TuiiColors.linkTextColor)),
                       ),
                       Text(' apply.'.i18n,
-                          style: const TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 14)),
                     ])
               ]),
         ]);

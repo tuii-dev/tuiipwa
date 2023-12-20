@@ -4,6 +4,9 @@ import 'package:tuiicore/core/config/theme/tuii_colors.dart';
 import 'package:tuiicore/core/enums/tuii_role_type.dart';
 import 'package:tuiipwa/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tuiipwa/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/mobile_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/onboarding_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/signup_screen.dart';
 
 class RoleSpecButton extends StatefulWidget {
   const RoleSpecButton(
@@ -36,12 +39,13 @@ class _RoleSpecButtonState extends State<RoleSpecButton> {
         BlocProvider.of<LoginCubit>(context).roleTypeChanged(widget.roleType);
         if (widget.isDelayedOnboarding) {
           if (_getRequiresPhoneVerication(context)) {
-            Navigator.of(context).pushNamed('/auth/mobile');
+            Navigator.of(context).pushReplacementNamed(MobileScreen.routeName);
           } else {
-            Navigator.of(context).pushNamed('/auth/personal');
+            Navigator.of(context)
+                .pushReplacementNamed(OnboardingScreen.routeName);
           }
         } else {
-          Navigator.of(context).pushNamed('/auth/signup');
+          Navigator.of(context).pushReplacementNamed(SignUpScreen.routeName);
         }
       },
       child: Container(

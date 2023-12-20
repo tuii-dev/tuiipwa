@@ -4,8 +4,9 @@ import 'package:tuiipwa/utils/pwa_i18n.dart';
 import 'package:tuiipwa/utils/spacing.dart';
 
 class AuthInstructionalTextWidget extends StatelessWidget {
-  const AuthInstructionalTextWidget({super.key});
+  const AuthInstructionalTextWidget({super.key, this.includeSubTitle = true});
 
+  final bool? includeSubTitle;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,14 +30,17 @@ class AuthInstructionalTextWidget extends StatelessWidget {
           const SizedBox(
             height: space20,
           ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: Text(
-              "Sign in if you have an existing account, or sign up for new one"
-                  .i18n,
-              style: const TextStyle(fontSize: 18, color: TuiiColors.white),
-            ),
-          ),
+          includeSubTitle == true
+              ? Flexible(
+                  fit: FlexFit.loose,
+                  child: Text(
+                    "Sign in if you have an existing account, or sign up for new one"
+                        .i18n,
+                    style:
+                        const TextStyle(fontSize: 18, color: TuiiColors.white),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ]);
   }
 }

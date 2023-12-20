@@ -17,17 +17,24 @@ import 'package:tuiicore/core/config/theme/tuii_dark_theme.dart';
 import 'package:tuiicore/core/config/theme/tuii_light_theme.dart';
 import 'package:tuiicore/core/models/system_constants.dart';
 import 'package:tuiipwa/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/identityVerification/identity_verification_cubit.dart';
 import 'package:tuiipwa/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/phoneVerification/phone_verification_cubit.dart';
+import 'package:tuiipwa/features/auth/presentation/cubit/profile/profile_cubit.dart';
 import 'package:tuiipwa/features/auth/presentation/pages/login_screen.dart';
 import 'package:tuiipwa/features/auth/presentation/pages/mobile_screen.dart';
+import 'package:tuiipwa/features/auth/presentation/pages/onboarding_screen.dart';
 import 'package:tuiipwa/features/auth/presentation/pages/profile_selection_screen.dart';
 import 'package:tuiipwa/features/auth/presentation/pages/signup_screen.dart';
 import 'package:tuiipwa/features/communications/presentation/bloc/stream_chat/stream_chat_bloc.dart';
+import 'package:tuiipwa/features/home/presentation/pages/home_screen.dart';
 import 'package:tuiipwa/features/splash/presentation/pages/splash_screen.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app/tuii_app_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app_link/tuii_app_link_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_beacon/tuii_beacon_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_notifications/tuii_notifications_bloc.dart';
+import 'package:tuiipwa/features/tuii_app/presentation/pages/tuii_app_screen.dart';
+import 'package:tuiipwa/injection_container.dart';
 import 'package:tuiipwa/routes.dart';
 import 'package:tuiipwa/utils/conditional_route_widget.dart';
 import 'package:tuiipwa/web/constants/constants.dart';
@@ -46,7 +53,7 @@ String? appVersion;
 
 // App Key 6aby9fv6jwxm
 // Dev Key 5erm4235gptj
-const String streamChatAppKey = '6aby9fv6jwxm';
+const String streamChatAppKey = '5erm4235gptj';
 final client = sc.StreamChatClient(streamChatAppKey, logLevel: sc.Level.SEVERE);
 
 void main() {
@@ -140,7 +147,16 @@ class TuiiPwaApp extends StatelessWidget {
           create: (context) => di.sl<LoginCubit>(),
         ),
         BlocProvider(
+          create: (context) => di.sl<PhoneVerificationCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<IdentityVerificationCubit>(),
+        ),
+        BlocProvider(
           create: (context) => di.sl<StreamChatBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<TuiiNotificationsBloc>(),
         ),
         BlocProvider(
           create: (context) => di.sl<TuiiAppBloc>()
@@ -215,11 +231,14 @@ class TuiiPwaApp extends StatelessWidget {
                 ],
                 child: LoaderOverlay(
                     useDefaultLoading: false,
-                    overlayWidget: const Center(
-                        child: SizedBox(
+                    overlayColor: TuiiColors.muted.withOpacity(0.4),
+                    overlayWholeScreen: true,
+                    overlayWidget: Center(
+                        child: Container(
                             width: 50,
                             height: 50,
-                            child: LoadingIndicator(
+                            color: Colors.transparent,
+                            child: const LoadingIndicator(
                               indicatorType: Indicator.lineScale,
                               colors: [
                                 TuiiColors.primary,
@@ -232,7 +251,7 @@ class TuiiPwaApp extends StatelessWidget {
                     child: child!)),
           );
         },
-        initialRoute: '/splash',
+        initialRoute: SplashScreen.routeName,
         // The following code implements the legacy ResponsiveWrapper AutoScale functionality
         // using the new ResponsiveScaledBox. The ResponsiveScaledBox widget preserves
         // the legacy ResponsiveWrapper behavior, scaling the UI instead of resizing.
@@ -267,9 +286,13 @@ class TuiiPwaApp extends StatelessWidget {
                               ]).value,
                           child: child!),
                     ),
-                child: BouncingScrollWrapper.builder(
-                    context, buildPage(settings.name ?? '', settings.arguments),
-                    dragWithMouse: true));
+                child: SystemConstantsProvider(
+                  child: BouncingScrollWrapper.builder(
+                      context,
+                      buildPage(
+                          context, settings.name ?? '', settings.arguments),
+                      dragWithMouse: true),
+                ));
           });
         },
       ),
@@ -279,18 +302,44 @@ class TuiiPwaApp extends StatelessWidget {
 
 // onGenerateRoute route switcher.
 // Navigate using the page name, `Navigator.pushNamed(context, ListPage.name)`.
-Widget buildPage(String name, Object? arguments) {
+Widget buildPage(BuildContext context, String name, Object? arguments) {
   switch (name) {
-    case '/splash':
+    case SplashScreen.routeName:
       return const SplashScreen();
-    case '/auth/login':
+    case LoginScreen.routeName:
       return I18n(child: const LoginScreen());
-    case '/auth/signup':
+    case SignUpScreen.routeName:
       return I18n(child: const SignUpScreen());
-    case '/auth/profile':
+    case ProfileSelectionScreen.routeName:
       return I18n(child: const ProfileSelectionScreen());
-    case '/auth/mobile':
-      return I18n(child: const MobileScreen());
+    case MobileScreen.routeName:
+      return I18n(
+        child: const MobileScreen(),
+      );
+    case OnboardingScreen.routeName:
+      var user = BlocProvider.of<AuthBloc>(context).state.user!;
+      final roleType = BlocProvider.of<LoginCubit>(context).state.roleType;
+      user = user.copyWith(roleType: roleType);
+      if (user.phoneVerified != true) {
+        final phoneNumber =
+            BlocProvider.of<PhoneVerificationCubit>(context).state.phoneNumber;
+        if (phoneNumber != null) {
+          user = user.copyWith(
+              phoneNumber: phoneNumber.phoneNumber, phoneVerified: true);
+        }
+      }
+      return I18n(
+          child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => di.sl<ProfileCubit>()
+              ..init(user: user, roleType: user.roleType!),
+          ),
+        ],
+        child: const OnboardingScreen(),
+      ));
+    case TuiiAppScreen.routeName:
+      return I18n(child: const TuiiAppScreen());
     default:
       return _errorRoute();
   }

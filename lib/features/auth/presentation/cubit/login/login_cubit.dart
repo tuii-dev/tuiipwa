@@ -60,16 +60,8 @@ class LoginCubit extends Cubit<LoginState> {
         roleType: roleType));
   }
 
-  void roleTypeChangedComplete() {
-    emit(state.copyWith(status: LoginStatus.success));
-  }
-
-  // void firstNameChanged(String value) {
-  //   emit(state.copyWith(firstName: value, status: LoginStatus.initial));
-  // }
-
-  // void lastNameChanged(String value) {
-  //   emit(state.copyWith(lastName: value, status: LoginStatus.initial));
+  // void roleTypeChangedComplete() {
+  //   emit(state.copyWith(status: LoginStatus.success));
   // }
 
   void loginWithCredentials() async {
