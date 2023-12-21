@@ -39,9 +39,10 @@ class TuiiAppState extends Equatable {
 
   factory TuiiAppState.initial() {
     return const TuiiAppState(
-        status: TuiiAppStatus.loggedOut,
-        changingPasswordStatus: TuiiChangePasswordStatus.unknown,
-        pendingVersionUpdate: false);
+      status: TuiiAppStatus.loggedOut,
+      changingPasswordStatus: TuiiChangePasswordStatus.unknown,
+      pendingVersionUpdate: false,
+    );
   }
 
   @override

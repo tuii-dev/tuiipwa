@@ -63,6 +63,7 @@ dependencies:
   syncfusion_flutter_calendar: ^20.1.55
   syncfusion_flutter_core: ^20.4.44
   timeago: ^3.2.2
+  transitioned_indexed_stack: ^1.0.2
   tuiiapp_domain_data_firestore:
     path: ../tuiiapp_domain_data_firestore/
   tuiiauth_domain_data_firestore:

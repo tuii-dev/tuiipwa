@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:tuiicore/core/config/theme/tuii_colors.dart';
 import 'package:tuiicore/core/enums/tuii_role_type.dart';
 import 'package:tuiicore/core/services/snackbar_service.dart';
 import 'package:tuiicore/core/widgets/save_button.dart';
@@ -154,9 +155,11 @@ class _ProfileManagerWidgetState extends State<ProfileManagerWidget> {
                           (state.selectedFormIndex ?? 0) > 0
                               ? SaveButton(
                                   callback: () => _manageBack(context),
-                                  label: "Back".i18n,
+                                  label: "BACK".i18n,
                                   width: 80,
                                   height: 30,
+                                  fontColor: TuiiColors.primary,
+                                  backgroundColor: TuiiColors.white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 )
@@ -165,7 +168,7 @@ class _ProfileManagerWidgetState extends State<ProfileManagerWidget> {
                           (state.selectedFormIndex ?? 0) < 2
                               ? SaveButton(
                                   callback: () => _manageNext(context),
-                                  label: "Next".i18n,
+                                  label: "NEXT".i18n,
                                   width: 80,
                                   height: 30,
                                   fontSize: 14,

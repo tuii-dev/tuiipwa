@@ -91,6 +91,7 @@ class StreamChatBloc extends Bloc<StreamChatEvent, StreamChatState> {
               '*** STREAMCHAT CONNECTED: User ${streamUser.id} connected to stream chat.  Total unread message count: ${streamUser.totalUnreadCount}');
 
           emit(state.copyWith(
+              invalidate: true,
               status: StreamChatStatus.connected,
               unreadCount: streamUser.totalUnreadCount,
               client: client,

@@ -27,14 +27,12 @@ import 'package:tuiipwa/features/auth/presentation/pages/onboarding_screen.dart'
 import 'package:tuiipwa/features/auth/presentation/pages/profile_selection_screen.dart';
 import 'package:tuiipwa/features/auth/presentation/pages/signup_screen.dart';
 import 'package:tuiipwa/features/communications/presentation/bloc/stream_chat/stream_chat_bloc.dart';
-import 'package:tuiipwa/features/home/presentation/pages/home_screen.dart';
 import 'package:tuiipwa/features/splash/presentation/pages/splash_screen.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app/tuii_app_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_app_link/tuii_app_link_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_beacon/tuii_beacon_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/bloc/tuii_notifications/tuii_notifications_bloc.dart';
 import 'package:tuiipwa/features/tuii_app/presentation/pages/tuii_app_screen.dart';
-import 'package:tuiipwa/injection_container.dart';
 import 'package:tuiipwa/routes.dart';
 import 'package:tuiipwa/utils/conditional_route_widget.dart';
 import 'package:tuiipwa/web/constants/constants.dart';
@@ -339,6 +337,9 @@ Widget buildPage(BuildContext context, String name, Object? arguments) {
         child: const OnboardingScreen(),
       ));
     case TuiiAppScreen.routeName:
+      final user = BlocProvider.of<AuthBloc>(context).state.user!;
+      BlocProvider.of<TuiiNotificationsBloc>(context).init(user.id!);
+
       return I18n(child: const TuiiAppScreen());
     default:
       return _errorRoute();

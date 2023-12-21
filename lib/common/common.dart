@@ -35,6 +35,18 @@ void manageLoginScreenRoute(BuildContext context) {
       .pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
 }
 
+String getUserInitialsFromFirstAndLastName(
+    String? firstName, String? lastName) {
+  String initials = 'U';
+  if (firstName != null && firstName.isNotEmpty) {
+    initials = firstName[0].toUpperCase();
+  }
+  if (lastName != null && lastName.isNotEmpty) {
+    initials += lastName[0].toUpperCase();
+  }
+  return initials;
+}
+
 Text getOrText() {
   return Text('---- Or ----'.i18n,
       style: const TextStyle(

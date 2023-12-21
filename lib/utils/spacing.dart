@@ -12,4 +12,6 @@ const double spaceAppBar = 56;
 // Padding
 const EdgeInsets paddingHorizontal20 =
     EdgeInsets.symmetric(horizontal: space20);
+const EdgeInsets paddingHorizontal10 =
+    EdgeInsets.symmetric(horizontal: space10);
 const EdgeInsets paddingAll20 = EdgeInsets.all(space20);
